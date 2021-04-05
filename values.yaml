@@ -3,7 +3,7 @@
 ## ------------------------------------------------------
 cp-zookeeper:
   enabled: true
-  servers: 3
+  servers: 1
   image: confluentinc/cp-zookeeper
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -42,7 +42,7 @@ cp-zookeeper:
 ## ------------------------------------------------------
 cp-kafka:
   enabled: true
-  brokers: 3
+  brokers: 1
   image: confluentinc/cp-enterprise-kafka
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -50,6 +50,13 @@ cp-kafka:
   imagePullSecrets:
   #  - name: "regcred"
   heapOptions: "-Xms512M -Xmx512M"
+  nodeport:
+    enabled: true
+    servicePort: 19092
+    firstListenerPort: 31090
+  configurationOverrides:
+    "advertised.listeners": |-
+     EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
   persistence:
     enabled: true
     # storageClass: ""
@@ -71,7 +78,7 @@ cp-kafka:
 ## Schema Registry
 ## ------------------------------------------------------
 cp-schema-registry:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-schema-registry
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -93,7 +100,7 @@ cp-schema-registry:
 ## REST Proxy
 ## ------------------------------------------------------
 cp-kafka-rest:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-kafka-rest
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -115,7 +122,7 @@ cp-kafka-rest:
 ## Kafka Connect
 ## ------------------------------------------------------
 cp-kafka-connect:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-kafka-connect
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -137,7 +144,7 @@ cp-kafka-connect:
 ## KSQL Server
 ## ------------------------------------------------------
 cp-ksql-server:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-ksqldb-server
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
@@ -152,7 +159,7 @@ cp-ksql-server:
 ## Control Center
 ## ------------------------------------------------------
 cp-control-center:
-  enabled: true
+  enabled: false
   image: confluentinc/cp-enterprise-control-center
   imageTag: 6.0.1
   ## Optionally specify an array of imagePullSecrets. Secrets must be manually created in the namespace.
